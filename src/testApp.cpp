@@ -17,26 +17,25 @@ void testApp::setup(){
 
     tactonic.init(true);
     tactonic.createFrame(&frame);
-    tactonic.addFrameCallback(FrameCallback);
-    tactonic.start();
     
     sensorSquareSizePixels = ofVec2f(ofGetWidth() / tactonic.getWidth(), ofGetWidth() / tactonic.getWidth());
     sensorSizePixels = ofVec2f(sensorSquareSizePixels.x * tactonic.getWidth(), sensorSquareSizePixels.y * tactonic.getHeight());
-    
 //    sensorToScreen = ofVec2f(ofGetWidth() / tactonic.getWidth(), ofGetHeight() / tactonic.getHeight());
     sensorToScreen = ofVec3f(500, -250, -250);
-    
-    ofEnableSmoothing();
-    ofEnableAlphaBlending();
     
     maxForce = 0;
     isDown = false;
     
-    material.setup(200, 200, 1);
+    material.setup(100, 100, 1);
+    tool.setArea(ofVec3f(0, 0, -10), ofVec3f(200, 200, 10));
     
     cam = ofEasyCam();
-    cam.setPosition(500, 250, 1200);
-    cam.setNearClip(0.01);
+    cam.setPosition(100, 210, -20);
+    cam.lookAt(ofVec3f(100, 100, 0), ofVec3f(0, 0, -1));
+//    cam.setScale(0.1);
+//    cam.setPosition(5, 2.5, -12);
+//    cam.setPosition(0, 0, 0);
+//    cam.setNearClip(0.01);
 
     light.enable();
     light.setPointLight();
@@ -44,16 +43,18 @@ void testApp::setup(){
     // osc
 //    oscSend.setup("localhost", 9999);
     
+    tactonic.addFrameCallback(FrameCallback);
+    tactonic.start();
+
+    
     // initialized
     initialized = true;
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
-    
-    
 //    material.repulse(tool.pos, 0.07);
-    material.setToolPosition(tool.pos, 0.07);
+    tool.inMaterial = material.setToolPosition(tool.getWorldPos(), 4);
     material.update();
 }
 
@@ -61,26 +62,17 @@ void testApp::update(){
 void testApp::draw(){
     ofEnableLighting();
 
-    ofPushMatrix();
-
-    ofScale(300, 300, 300);
-
     cam.begin();
+    ofTranslate(-tool.areaCenter);//-200, -200, 0);
+    
     
     ofClear(0);
-
-    
     
     material.draw();
     tool.draw();
     
-//    ofSetColor(255);
-//    light.draw();
-    
-
     cam.end();
 
-    ofPopMatrix();
     return;
     
     
@@ -107,7 +99,9 @@ void testApp::exit(){
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
-
+    if (key == 'r') {
+        material.reset();
+    }
 }
 
 //--------------------------------------------------------------

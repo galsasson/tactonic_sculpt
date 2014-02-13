@@ -23,13 +23,15 @@ public:
     void update();
     void draw();
     
-    void setToolPosition(ofVec3f p, float rad);
+    bool setToolPosition(ofVec3f p, float rad);
     void repulse(ofVec3f p, float rad);
     void attract(ofVec3f p, float rad);
     
+    void reset();
+    
     int width, height, depth;
     vector<Vertex*> particles;
-    ofVboMesh mesh;
+    ofMesh mesh;
     ofVbo vbo;
     
 private:

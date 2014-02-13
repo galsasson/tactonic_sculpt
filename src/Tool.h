@@ -18,13 +18,22 @@ public:
     Tool();
     void setPos(float x, float y, float z, float hysteresis);
     void setPos(ofVec3f pos, float hysteresis);
+    void setArea(ofVec3f min, ofVec3f max);
     void setVisible(bool is);
     void setDown(bool is);
     void setForce(float f);
     void draw();
     
+    ofVec3f getWorldPos();
+    
+    // always from -1 - 1
     ofVec3f pos;
     
+    // the real world size of the surface
+    ofVec3f areaCenter;
+    ofVec3f scale;
+    
+    bool inMaterial;
 private:
     
     bool visible;

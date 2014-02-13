@@ -36,21 +36,22 @@ void MaterialBlock::update()
 
 void MaterialBlock::draw()
 {
-//    ofSetColor(100);
+    ofPushMatrix();
+    
     ofSetColor(255);
     ofFill();
-    mesh.disableColors();
-//    mesh.drawVertices();
+
     mesh.enableNormals();
-    mesh.drawFaces();
-//    mesh.draw();
-//    ofSetColor(255);
     mesh.drawWireframe();
-//    mesh.drawVertices();
+//    mesh.drawFaces();
+    
+    ofPopMatrix();
 }
 
-void MaterialBlock::setToolPosition(ofVec3f p, float rad)
+bool MaterialBlock::setToolPosition(ofVec3f p, float rad)
 {
+    bool toolInMaterial = false;
+    
     for (int i=0; i<particles.size(); i++)
     {
         Vertex *v = particles[i];
@@ -58,12 +59,15 @@ void MaterialBlock::setToolPosition(ofVec3f p, float rad)
         ofVec2f offset2d = ofVec2f(offset.x, offset.y);
         if (offset2d.length() < rad)
         {
+            toolInMaterial = true;
             float newZ = p.z + rad * cos(offset2d.length()/rad);
             if (newZ > v->z) {
                 v->z = newZ;
             }
         }
     }
+    
+    return toolInMaterial;
 }
 
 
@@ -87,6 +91,15 @@ void MaterialBlock::attract(ofVec3f p, float rad)
     
 }
 
+void MaterialBlock::reset()
+{
+    for (int i=0; i<particles.size(); i++)
+    {
+        Vertex *v = particles[i];
+        v->z = 0;
+    }
+}
+
 void MaterialBlock::initGeometry()
 {
 //    particles = new vector<Vertex*>();
@@ -99,21 +112,21 @@ void MaterialBlock::initGeometry()
     float zDepth = 0.5+zStep*depth;
     float yStep = (float)2/height;
     float xStep = (float)2/width;
-    for (float z=0.5; z<zDepth; z+=zStep)
-    {
-        for (float y=-1; y<=1; y+=yStep)
+//    for (float z=0.5; z<zDepth; z+=zStep)
+//    {
+        for (float y=0; y<=height; y+=1)
         {
-            for (float x=-1; x<=1; x+=xStep)
+            for (float x=0; x<=width; x+=1)
             {
                 Vertex *v = new Vertex();
-                v->setup(ofVec3f(x, y, z));// + ofVec3f(ofRandom(xStep), ofRandom(yStep), ofRandom(zStep)));
+                v->setup(ofVec3f(x*2, y*2, 0) + ofVec3f(ofRandom(1), ofRandom(1), ofRandom(0)));
                 particles.push_back(v);
                 mesh.addVertex((ofVec3f)(*v));
                 mesh.addColor(ofColor(255, 255, 255, 255));//ofFloatColor(1, 1, 1));
                 mesh.addNormal(ofVec3f(0, 0, -1));
             }
         }
-    }
+//    }
     
     // create indices
     mesh.clearIndices();
