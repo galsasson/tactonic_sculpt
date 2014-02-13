@@ -38,12 +38,8 @@ void MaterialBlock::draw()
 {
     ofPushMatrix();
     
-    ofSetColor(255);
-    ofFill();
-
     mesh.enableNormals();
     mesh.drawWireframe();
-//    mesh.drawFaces();
     
     ofPopMatrix();
 }
@@ -122,7 +118,7 @@ void MaterialBlock::initGeometry()
                 v->setup(ofVec3f(x*2, y*2, 0) + ofVec3f(ofRandom(1), ofRandom(1), ofRandom(0)));
                 particles.push_back(v);
                 mesh.addVertex((ofVec3f)(*v));
-                mesh.addColor(ofColor(255, 255, 255, 255));//ofFloatColor(1, 1, 1));
+                mesh.addColor(ofColor(255, 255, 255, 80));
                 mesh.addNormal(ofVec3f(0, 0, -1));
             }
         }

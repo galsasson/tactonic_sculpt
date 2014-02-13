@@ -31,7 +31,7 @@ public:
     
     int width, height, depth;
     vector<Vertex*> particles;
-    ofMesh mesh;
+    ofVboMesh mesh;
     ofVbo vbo;
     
 private:
